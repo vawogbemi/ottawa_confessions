@@ -19,7 +19,7 @@ export function MobileNav(props: {
     //Bookmarks
   };
   return (
-    <div className="md:hidden w-full flex flex-wrap gap-2 max-h-20 absolute bottom-0 z-50 border-t border-zinc-300 align-items-center">
+    <div className="md:hidden w-full flex flex-wrap gap-2 max-h-20 absolute bottom-0 z-50 border-t border-zinc-300 items-center">
       {Object.entries(links).map(([to, value]) => (
         <Link
           key={to}
@@ -29,7 +29,7 @@ export function MobileNav(props: {
           <div className="mx-auto flex text-primary">{value}</div>
         </Link>
       ))}
-      <Link to={props.user ? "/post" : "/login"} className="mx-auto mt-1 px-7">
+      <Link to={props.user ? "/post" : "/login"} className="mx-auto px-7 h-full">
         <button className="btn btn-primary">
           {props.user ? "Post" : "Login"}
         </button>

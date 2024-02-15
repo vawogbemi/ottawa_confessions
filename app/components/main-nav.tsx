@@ -19,7 +19,7 @@ export function MainNav(props: {
     //Bookmarks
   };
   return (
-    <div className="hidden md:flex md:flex-wrap h-screen lg:w-[341px] xl:w-[426px] 2xl:w-[512px]">
+    <div className="hidden h-full md:flex md:flex-wrap h-screen lg:w-[341px] xl:w-[426px] 2xl:w-[512px]">
       <Link to={"/"} className="mx-auto h-5">
         <p className="text-2xl text-primary font-bold">Ottawa</p>
         <p className="text-2xl text-primary font-bold">Confessions</p>

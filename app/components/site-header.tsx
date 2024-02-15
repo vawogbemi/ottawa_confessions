@@ -15,7 +15,7 @@ export function SiteHeader(props: {
   const pathname = useLocation().pathname;
 
   return (
-    <div className="sticky top-0 z-50">
+    <div className="sticky top-0 z-50 w-full bg-white">
       <Link to={"/"}><div className="lg:hidden font-bold text-primary text-xl ml-2">
         <p>Ottawa</p>
         <p>Confessions</p>

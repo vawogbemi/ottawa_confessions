@@ -77,7 +77,6 @@ export default function App() {
   );
 
   const serverAccessToken = session?.access_token;
-  console.log(session)
 
   useEffect(() => {
     const {
@@ -107,10 +106,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="flex">
-        <main className="mx-auto container flex">
+      <body className="flex h-screen">
+        <main className="mx-auto h-full container flex">
           <MainNav user={user} />
-          <div className="w-full border-x border-x-zinc-100">
+          <div className="w-full h-full flex flex-wrap border-x border-x-zinc-100">
             <SiteHeader user={user} />
             <Outlet context={{ supabase, user }} />
             <MobileNav user={user} />
