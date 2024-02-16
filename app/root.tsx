@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
   json,
+  redirect,
   useLoaderData,
   useRevalidator,
 } from "@remix-run/react";
@@ -56,6 +57,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       }
     );
   }
+
+  const url = new URL(request.url)
+
+  if (!["/", "/login"].includes(url.pathname)){
+    return redirect("/login")
+  }
+
   return json(
     {
       env,
@@ -109,7 +117,7 @@ export default function App() {
       <body className="flex h-screen">
         <main className="mx-auto h-full container flex">
           <MainNav user={user} />
-          <div className="w-full h-full flex flex-wrap border-x border-x-zinc-100">
+          <div className="w-full h-full flex flex-wrap sm:max-w-[640px] md:max-w-[768px] lg:max-w-[683px] xl:max-w-[853px] 2xl:max-w-[1024px]">
             <SiteHeader user={user} />
             <Outlet context={{ supabase, user }} />
             <MobileNav user={user} />

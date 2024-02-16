@@ -19,7 +19,7 @@ export function MobileNav(props: {
     //Bookmarks
   };
   return (
-    <div className="md:hidden w-full flex flex-wrap gap-2 max-h-20 absolute bottom-0 z-50 border-t border-zinc-300 items-center">
+    <div className="md:hidden w-full flex flex-wrap gap-2 max-h-20 fixed bottom-0 z-50 bg-white border-t border-zinc-300 items-center">
       {Object.entries(links).map(([to, value]) => (
         <Link
           key={to}

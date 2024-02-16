@@ -15,26 +15,29 @@ export function SiteHeader(props: {
   const pathname = useLocation().pathname;
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-white">
-      <Link to={"/"}><div className="lg:hidden font-bold text-primary text-xl ml-2">
-        <p>Ottawa</p>
-        <p>Confessions</p>
-      </div>
+    <div className="fixed w-full bg-white" style={{maxWidth: "inherit"}}>
+      <Link to={"/"}>
+        <div className="lg:hidden font-bold text-primary text-xl ml-2">
+          <p>Ottawa</p>
+          <p>Confessions</p>
+        </div>
       </Link>
-      <div className={
-        [
-          "",
-          "/",
-          "/ottawa",
-          "/ottawa/",
-          "/uottawa",
-          "/uottawa/",
-          "/carletonu",
-          "/carletonu/",
-        ].includes(pathname)
-          ? "flex"
-          : "hidden"
-      }>
+      <div
+        className={
+          [
+            "",
+            "/",
+            "/ottawa",
+            "/ottawa/",
+            "/uottawa",
+            "/uottawa/",
+            "/carletonu",
+            "/carletonu/",
+          ].includes(pathname)
+            ? "flex"
+            : "hidden"
+        }
+      >
         {links.map((link) => (
           <SiteHeaderCard key={link} to={link} user={props.user} />
         ))}

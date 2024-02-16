@@ -1,4 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import {
+  Form,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
+import { fetchPosts } from "~/api/server";
+import { Feed } from "~/components/feed";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,35 +15,31 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const page = url.searchParams.get("page") || 1;
+
+  const posts = await fetchPosts(request, Number(page));
+
+  return json({ posts });
+};
+
 export default function Index() {
+  const { posts } = useLoaderData<typeof loader>();
+  const fetcher = useFetcher<typeof loader>();
+
+  const { user } = useOutletContext<{
+    user: {
+      id: string;
+      username: string;
+      city: string | null;
+      school: string | null;
+    } | null;
+  }>();
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
+    <Form className="w-full" method="post">
+      <Feed fetcher={fetcher} posts={posts} user={user} />
+    </Form>
   );
 }

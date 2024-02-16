@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      allowed_domains: {
+        Row: {
+          city: string | null
+          created_at: string
+          domain: string
+          id: number
+          school: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          domain: string
+          id?: number
+          school?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          domain?: string
+          id?: number
+          school?: string | null
+        }
+        Relationships: []
+      }
+      allowed_emails: {
+        Row: {
+          city: string
+          created_at: string
+          email: string
+          id: number
+          school: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          email: string
+          id?: number
+          school: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          email?: string
+          id?: number
+          school?: string
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string
@@ -48,37 +96,46 @@ export type Database = {
       posts: {
         Row: {
           city: string
+          comments: number
           content: string
           created_at: string
+          feed: string | null
           id: number
           likes: number
           school: string
           title: string
           user: string
+          user_tag: string
           username: string
           views: number
         }
         Insert: {
           city: string
+          comments?: number
           content: string
           created_at?: string
+          feed?: string | null
           id?: number
           likes?: number
           school: string
           title: string
           user?: string
+          user_tag: string
           username: string
           views?: number
         }
         Update: {
           city?: string
+          comments?: number
           content?: string
           created_at?: string
+          feed?: string | null
           id?: number
           likes?: number
           school?: string
           title?: string
           user?: string
+          user_tag?: string
           username?: string
           views?: number
         }
