@@ -4,7 +4,7 @@ import {
   HeartIcon as HeartIconOutline,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "@remix-run/react";
+import { Link, useSubmit } from "@remix-run/react";
 
 export function PostView(props: {
   posts: {
@@ -68,6 +68,7 @@ export function Post(props: {
   const { post, isLiked } = postProps;
   const [isLikedToggle, setIsLikedToggle] = useState(isLiked);
   const [liked, setLiked] = useState(false);
+  const submit = useSubmit()
   return (
     <div
       className="w-full lg:w-1/2 h-[225px] border border-zinc-100 p-3 flex flex-wrap"
@@ -88,7 +89,8 @@ export function Post(props: {
         <div className="flex w-1/2 items-center">
           <button
             className="w-full h-full flex items-center"
-            onClick={() => user ? (setIsLikedToggle(!isLikedToggle), setLiked(!liked)) : null}
+            type='button'
+            onClick={() => user ? (setIsLikedToggle(!isLikedToggle), setLiked(!liked), submit({post: post.id, user: user.id},{method:"post"})) : null}
           >
             {isLikedToggle ? (
               <HeartIconSolid className="w-6 h-6 text-rose-500" />

@@ -3,6 +3,14 @@ import { Auth } from "@supabase/auth-ui-react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "database.types";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Ottawa Confessions | Login" },
+    { name: "Ottawa Confessions Login Page", content: "Welcome to Remix!" },
+  ];
+};
 
 export default function Login() {
   const { supabase } = useOutletContext<{
@@ -10,7 +18,7 @@ export default function Login() {
   }>();
 
   return (
-    <div className="w-[400px] mx-auto mt-10 lg:mt-40">
+    <div className="w-[400px] mx-auto mt-40 lg:mt-80">
       <Auth
         supabaseClient={supabase}
         appearance={{

@@ -1,25 +1,32 @@
 import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useOutletContext,
-} from "@remix-run/react";
-import { fetchPosts } from "~/api/server";
+import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
+import { fetchPosts, verifyLike } from "~/api/server";
 import { Feed } from "~/components/feed";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Ottawa Confessions" },
+    {
+      name: "Ottawa's private student community",
+      content: "Ottawa's private student community",
+    },
   ];
+};
+
+export const action = async ({ request }: LoaderFunctionArgs) => {
+  const formData = Object.fromEntries(await request.formData());
+
+  const post = parseInt(formData.post as string);
+  const user = formData.user as string;
+
+  return verifyLike(post, user);
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || 1;
 
-  const posts = await fetchPosts(request, Number(page));
+  const posts = await fetchPosts(request, Number(page), "Ottawa");
 
   return json({ posts });
 };
@@ -38,8 +45,8 @@ export default function Index() {
   }>();
 
   return (
-    <Form className="w-full" method="post">
+    <form className="w-full" method="post">
       <Feed fetcher={fetcher} posts={posts} user={user} />
-    </Form>
+    </form>
   );
 }

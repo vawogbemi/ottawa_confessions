@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import _ from "lodash";
-import { FetcherWithComponents } from "@remix-run/react";
+import { FetcherWithComponents, Link } from "@remix-run/react";
 import { InfiniteScroller } from "./infinite-scroller";
 import { PostView } from "./post-view";
 
@@ -85,21 +85,27 @@ export function Feed(props: {
 
   return (
     <InfiniteScroller loadNext={loadNext} loading={fetcher.state === "loading"}>
-      <div className="w-full flex flex-wrap">
-        {/*Spacing for Site Header */}
-        <div className="py-14 lg:py-7 w-full"></div>
-        <PostView
-          posts={user ? postsData : postsData.slice(1, 10)}
-          user={user}
-        />
-        {!user && (
-          <div className="w-full h-screen flex">
-            <button className="btn btn-primary mx-auto my-auto">
-              Login to view more
-            </button>
-          </div>
-        )}
-      </div>
+      {postsData && postsData.length > 0 ? (
+        <div className="w-full flex flex-wrap">
+          {/*Spacing for Site Header */}
+          <div className="py-14 lg:py-7 w-full"></div>
+          <PostView
+            posts={user ? postsData : postsData.slice(1, 10)}
+            user={user}
+          />
+          {!user && (
+            <div className="w-full h-screen flex">
+              <button className="btn btn-primary mx-auto my-auto" type="button">
+                Login to view more
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="h-screen border-l border-zinc-100 flex">
+          <p className="font-bold mx-auto my-auto">No posts yet. Create the first <Link to={"/post/new"} className="text-primary">one.</Link></p>
+        </div>
+      )}
     </InfiniteScroller>
   );
 }

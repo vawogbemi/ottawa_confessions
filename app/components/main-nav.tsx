@@ -28,7 +28,7 @@ export function MainNav(props: {
             <p className="text-2xl text-primary font-bold">Ottawa</p>
             <p className="text-2xl text-primary font-bold">Confessions</p>
             <p className="text-lg text-primary text-pretty">
-              A safe space for students in Ottawa
+              Confess
             </p>
           </Link>
           {false && (

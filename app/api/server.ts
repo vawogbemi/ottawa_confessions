@@ -42,7 +42,7 @@ export function validateUsername(username: string) {
   }
 }
 
-export async function fetchPosts(request: Request, page: number) {
+export async function fetchPosts(request: Request, page: number, feed: string) {
   const { supabase: anonClient } = AnonServerClient(request);
   const session = await anonClient.auth.getSession();
   const supabase = ServiceServerClient();
@@ -50,6 +50,7 @@ export async function fetchPosts(request: Request, page: number) {
   const { data: topPosts, error: topPostsError } = await supabase
     .from("posts")
     .select()
+    .eq("feed", feed)
     .gt(
       "created_at",
       new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString()
@@ -64,6 +65,7 @@ export async function fetchPosts(request: Request, page: number) {
   const { data: recentPosts, error: recentPostsError } = await supabase
     .from("posts")
     .select()
+    .eq("feed", feed)
     .order("created_at", { ascending: false })
     .range((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE - 1);
 
@@ -82,7 +84,7 @@ export async function fetchPosts(request: Request, page: number) {
     const { data: likes } = await supabase
       .from("likes")
       .select("post")
-      .eq("user", session.data.session!.user)
+      .eq("user", session.data.session!.user.id)
       .in(
         "post",
         uniquePosts.map((post) => post.id)
@@ -99,4 +101,77 @@ export async function fetchPosts(request: Request, page: number) {
   const posts = uniquePosts.map((post) => ({ post, isLiked: false }));
 
   return { posts, page };
+}
+
+export async function verifyLike(post: number, user: string) {
+  const supabase = ServiceServerClient();
+
+  const { data: like, error: fetchLikeError } = await supabase
+    .from("likes")
+    .select()
+    .eq("post", post)
+    .eq("user", user);
+
+  if (fetchLikeError) {
+    console.log("FETCH LIKE ERROR: " + fetchLikeError);
+  }
+
+  const { data, error: fetchPostError } = await supabase
+    .from("posts")
+    .select("likes")
+    .eq("id", post);
+
+  if (fetchPostError) {
+    console.log("FETCH POST ERROR: " + fetchPostError);
+  }
+
+  if (like && like.at(0)) {
+    //add like to post
+    const { error: removelikeError } = await supabase
+      .from("likes")
+      .delete()
+      .eq("post", post)
+      .eq("user", user);
+
+    if (removelikeError) {
+      console.log("REMOVE LIKE ERROR: " + removelikeError);
+    }
+    //remove like from post
+    if (data && data?.at(0) && typeof data.at(0)?.likes == "number") {
+      const likes = data?.at(0)?.likes;
+
+      const { error: likePostError } = await supabase
+        .from("posts")
+        .update({ likes: likes! - 1 })
+        .eq("id", post);
+
+      if (likePostError) {
+        console.log("LIKE POST ERROR: " + likePostError);
+      }
+    }
+  } else {
+    //add like to table
+    const { error: addlikeError } = await supabase
+      .from("likes")
+      .insert({ post: post, user: user });
+
+    if (addlikeError) {
+      console.log("ADD LIKE ERROR: " + addlikeError);
+    }
+    //add like to post
+    if (data && data?.at(0) && typeof data.at(0)?.likes == "number") {
+      const likes = data?.at(0)?.likes;
+
+      const { error: likePostError } = await supabase
+        .from("posts")
+        .update({ likes: likes! + 1 })
+        .eq("id", post);
+
+      if (likePostError) {
+        console.log("LIKE POST ERROR: " + likePostError);
+      }
+    }
+  }
+
+  return null;
 }
