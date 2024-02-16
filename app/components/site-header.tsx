@@ -16,7 +16,7 @@ export function SiteHeader(props: {
   const { user } = props;
 
   return (
-    <div className="fixed w-full bg-white" style={{ maxWidth: "inherit" }}>
+    <div className="fixed w-full bg-base-100" style={{ maxWidth: "inherit" }}>
       <Link to={"/"}>
         <div className="lg:hidden font-bold text-primary text-xl ml-2">
           <p>Ottawa</p>
@@ -26,17 +26,15 @@ export function SiteHeader(props: {
       <div
         className={
           [
-            "",
-            "/",
-            "/ottawa",
-            "/ottawa/",
-            "/uottawa",
-            "/uottawa/",
-            "/carletonu",
-            "/carletonu/",
+            "/login",
+            "/login/",
+            "/profile",
+            "/profile/",
+            "/post",
+            "/post/"
           ].includes(pathname)
-            ? "flex"
-            : "hidden"
+            ? "hidden"
+            : "flex"
         }
       >
         {user && user.city && user.school ? (

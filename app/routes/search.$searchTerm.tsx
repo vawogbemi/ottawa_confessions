@@ -1,10 +1,9 @@
-import { json, LoaderFunctionArgs} from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { fetchPosts, verifyLike } from "~/api/server";
 import { Feed } from "~/components/feed";
 
-
-export const action = async ({ request }: LoaderFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = Object.fromEntries(await request.formData());
 
   const post = parseInt(formData.post as string);
@@ -35,9 +34,8 @@ export default function Index() {
     } | null;
   }>();
 
-
   return (
-    <form className="w-full" method="post">
+    <form className="w-full flex flex-wrap" method="post">
       <Feed fetcher={fetcher} posts={posts} user={user} />
     </form>
   );

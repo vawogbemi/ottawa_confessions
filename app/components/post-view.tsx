@@ -74,7 +74,7 @@ export function Post(props: {
       className="w-full lg:w-1/2 h-[225px] border border-zinc-100 p-3 flex flex-wrap"
       key={post.id}
     >
-      <Link to={user ? `post/${post.id}` : "/login"} className="w-full h-[90%]">
+      <Link to={user ? `/post/${post.id}` : "/login"} className="w-full h-[90%]">
         {" "}
         <p className="text-2xl font-extrabold text-primary text-wrap line-clamp-2">
           {post.title}
@@ -103,7 +103,7 @@ export function Post(props: {
           </button>
         </div>
         <div className="flex w-1/2 items-center">
-          <Link to={user ? `post/${post.id}` : "/login"} className="flex">
+          <Link to={user ? `/post/${post.id}` : "/login"} className="flex">
             <ChatBubbleLeftRightIcon className="w-6 h-6 text-zinc-400" />
             <p className="text-zinc-400 text-lg ml-1">{post.comments}</p>
           </Link>

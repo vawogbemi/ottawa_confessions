@@ -88,11 +88,12 @@ export function Feed(props: {
       {postsData && postsData.length > 0 ? (
         <div className="w-full flex flex-wrap">
           {/*Spacing for Site Header */}
-          <div className="py-14 lg:py-7 w-full"></div>
+          <div className="py-[3.75rem] lg:py-8 w-full"></div>
           <PostView
             posts={user ? postsData : postsData.slice(1, 10)}
             user={user}
           />
+                    <div className="py-6 lg:py-0 w-full"></div>
           {!user && (
             <div className="w-full h-screen flex">
               <button className="btn btn-primary mx-auto my-auto" type="button">
