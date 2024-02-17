@@ -6,7 +6,7 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import { fetchPosts, verifyLike } from "~/api/server";
-import { Feed } from "~/components/feed";
+import { PostFeed } from "~/components/feed";
 
 export const action = async ({ request }: LoaderFunctionArgs) => {
   const formData = Object.fromEntries(await request.formData());
@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || 1;
 
-  const posts = await fetchPosts(request, Number(page), "uOttawa");
+  const posts = await fetchPosts(request, Number(page), "", "uOttawa");
 
   return json({ posts });
 };
@@ -41,7 +41,7 @@ export default function Index() {
 
   return (
     <Form className="w-full" method="post">
-      <Feed fetcher={fetcher} posts={posts} user={user} />
+      <PostFeed fetcher={fetcher} posts={posts} user={user} />
     </Form>
   );
 }

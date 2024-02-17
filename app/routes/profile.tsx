@@ -57,66 +57,69 @@ export default function Profile() {
         }
       | null
       | undefined;
-    supabase: SupabaseClient<Database>
+    supabase: SupabaseClient<Database>;
   }>();
-  
+
   return (
     <div className="w-full h-full border-l border-zinc-10 flex flex-wrap">
-      <div className="max-w-[400px] flex flex-wrap w-full h-full mx-auto">
-      <form
-        method="post"
-        className="flex flex-wrap gap-y-5 mt-auto w-full"
-      >
-        <div className="w-full">
-          <label className="input input-bordered flex items-center gap-2">
-            <UserIcon className="w-4 h-4" />
-            Username
-            <input
-              name="username"
-              type="text"
-              className="grow"
-              placeholder={user?.username}
-              autoFocus
-            />
-          </label>
-          {actionData?.formErrors?.username ? (
-            <p style={{ color: "red" }}>{actionData?.formErrors?.username}</p>
-          ) : null}
-        </div>
-        <div className="w-full">
-          <label className="input input-bordered flex items-center gap-2">
-            <BuildingOffice2Icon className="w-4 h-4" />
-            City
-            <input
-              name="city"
-              type="text"
-              className="grow"
-              placeholder={user?.city as string}
-              disabled
-            />
-          </label>
-        </div>
-        <div className="w-full">
-          <label className="input input-bordered flex items-center gap-2">
-            <AcademicCapIcon className="w-4 h-4" />
-            School
-            <input
-              name="school"
-              type="text"
-              className="grow"
-              placeholder={user?.school as string}
-              disabled
-            />
-          </label>
-        </div>
-        <button className="btn btn-primary" >Update</button>
-      </form>
-      
-      
-      <button className="btn btn-primary mt-5" onClick={() => supabase.auth.signOut()}>Log Out</button>
-
+      <div className="max-w-[400px] flex flex-wrap w-full my-auto mx-auto">
+        <form method="post" className="flex flex-wrap gap-y-5 mt-auto w-full">
+          <div className="w-full">
+            <label className="input input-bordered flex items-center gap-2">
+              <UserIcon className="w-4 h-4" />
+              Username
+              <input
+                name="username"
+                type="text"
+                className="grow"
+                placeholder={user?.username}
+                autoFocus
+              />
+            </label>
+            {actionData?.formErrors?.username ? (
+              <p style={{ color: "red" }}>{actionData?.formErrors?.username}</p>
+            ) : null}
+          </div>
+          <div className="w-full">
+            <label className="input input-bordered flex items-center gap-2">
+              <BuildingOffice2Icon className="w-4 h-4" />
+              City
+              <input
+                name="city"
+                type="text"
+                className="grow"
+                placeholder={user?.city as string}
+                disabled
+              />
+            </label>
+          </div>
+          <div className="w-full">
+            <label className="input input-bordered flex items-center gap-2">
+              <AcademicCapIcon className="w-4 h-4" />
+              School
+              <input
+                name="school"
+                type="text"
+                className="grow"
+                placeholder={user?.school as string}
+                disabled
+              />
+            </label>
+          </div>
+          <div>
+          <button className="btn btn-primary">Update</button>
+          <button
+        type="button"
+          className="btn btn-primary ml-5"
+          onClick={() => supabase.auth.signOut()}
+        >
+          Log Out
+        </button>
+          </div>
+         
+        </form>
+        
       </div>
-
     </div>
   );
 }

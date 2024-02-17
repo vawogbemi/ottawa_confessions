@@ -1,7 +1,7 @@
 import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { fetchPosts, verifyLike } from "~/api/server";
-import { Feed } from "~/components/feed";
+import { PostFeed } from "~/components/feed";
 
 export const meta: MetaFunction = () => {
   return [
@@ -26,7 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || 1;
 
-  const posts = await fetchPosts(request, Number(page), "Ottawa");
+  const posts = await fetchPosts(request, Number(page), "Ottawa", "");
 
   return json({ posts });
 };
@@ -46,7 +46,7 @@ export default function Index() {
 
   return (
     <form className="w-full" method="post">
-      <Feed fetcher={fetcher} posts={posts} user={user} />
+      <PostFeed fetcher={fetcher} posts={posts} user={user} />
     </form>
   );
 }

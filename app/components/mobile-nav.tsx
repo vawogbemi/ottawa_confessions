@@ -29,7 +29,7 @@ export function MobileNav(props: {
           <div className="mx-auto flex text-primary">{value}</div>
         </Link>
       ))}
-      <Link to={props.user ? "/post" : "/login"} className="mx-auto px-7 h-full">
+      <Link to={props.user ? "/post/new" : "/login"} className="mx-auto px-7 h-full">
         <button className="btn btn-primary">
           {props.user ? "Post" : "Login"}
         </button>

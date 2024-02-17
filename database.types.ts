@@ -103,7 +103,6 @@ export type Database = {
           id: number
           likes: number
           school: string
-          title: string
           user: string
           user_tag: string
           username: string
@@ -118,7 +117,6 @@ export type Database = {
           id?: number
           likes?: number
           school: string
-          title: string
           user?: string
           user_tag: string
           username: string
@@ -133,7 +131,6 @@ export type Database = {
           id?: number
           likes?: number
           school?: string
-          title?: string
           user?: string
           user_tag?: string
           username?: string

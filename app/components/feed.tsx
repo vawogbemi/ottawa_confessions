@@ -4,7 +4,7 @@ import { FetcherWithComponents, Link } from "@remix-run/react";
 import { InfiniteScroller } from "./infinite-scroller";
 import { PostView } from "./post-view";
 
-export function Feed(props: {
+export function PostFeed(props: {
   fetcher: FetcherWithComponents<{
     posts: {
       posts: {
@@ -17,7 +17,6 @@ export function Feed(props: {
           id: number;
           likes: number;
           school: string;
-          title: string;
           user: string;
           user_tag: string;
           username: string;
@@ -39,7 +38,6 @@ export function Feed(props: {
         id: number;
         likes: number;
         school: string;
-        title: string;
         user: string;
         user_tag: string;
         username: string;
@@ -103,8 +101,8 @@ export function Feed(props: {
           )}
         </div>
       ) : (
-        <div className="h-screen border-l border-zinc-100 flex">
-          <p className="font-bold mx-auto my-auto">No posts yet. Create the first <Link to={"/post/new"} className="text-primary">one.</Link></p>
+        <div className="w-full flex-wrap h-screen border-l border-zinc-100 flex">
+          <p className="w-full font-bold mx-auto my-auto">No posts yet. Create the first <Link to={"/post/new"} className="text-primary">one.</Link></p>
         </div>
       )}
     </InfiniteScroller>

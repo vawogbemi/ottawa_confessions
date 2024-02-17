@@ -28,7 +28,7 @@ export function MainNav(props: {
             <p className="text-2xl text-primary font-bold">Ottawa</p>
             <p className="text-2xl text-primary font-bold">Confessions</p>
             <p className="text-lg text-primary text-pretty">
-              Confess
+              Anonymous confessions for students in Ottawa.
             </p>
           </Link>
           {false && (
@@ -67,7 +67,7 @@ export function MainNav(props: {
             </Link>
           ))}
           <Link
-            to={props.user ? "/post" : "/login"}
+            to={props.user ? "/post/new" : "/login"}
             className="mx-auto float-end"
           >
             <button className="btn btn-lg btn-primary p-6">

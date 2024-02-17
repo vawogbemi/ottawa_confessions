@@ -34,7 +34,7 @@ export function SiteHeader(props: {
             "/post/"
           ].includes(pathname)
             ? "hidden"
-            : "flex"
+            : "hidden"
         }
       >
         {user && user.city && user.school ? (

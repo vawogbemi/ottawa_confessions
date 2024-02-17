@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/auth-helpers-remix";
-import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { Database } from "database.types";
 import _ from "lodash";
 
@@ -42,11 +42,11 @@ export function validateUsername(username: string) {
   }
 }
 
-export async function fetchPosts(request: Request, page: number, feed: string) {
-  const { supabase: anonClient } = AnonServerClient(request);
-  const session = await anonClient.auth.getSession();
-  const supabase = ServiceServerClient();
-
+export async function fetchTopPosts(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  feed: string
+) {
   const { data: topPosts, error: topPostsError } = await supabase
     .from("posts")
     .select()
@@ -59,9 +59,44 @@ export async function fetchPosts(request: Request, page: number, feed: string) {
     .range((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE - 1);
 
   if (topPostsError) {
-    console.log(topPostsError);
+    console.log("TOP POSTS ERROR: " + topPostsError);
   }
 
+  return { topPosts };
+}
+
+export async function fetchTopPostsWithSearch(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  feed: string,
+  query: string
+) {
+  const formattedQuery = query.split(" ").map(word => `'${word}'`).join(" | ");
+
+  const { data: topPosts, error: topPostsError } = await supabase
+    .from("posts")
+    .select()
+    .eq("feed", feed)
+    .gt(
+      "created_at",
+      new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString()
+    )
+    .textSearch("content", formattedQuery)
+    .order("likes", { ascending: false })
+    .range((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE - 1);
+
+  if (topPostsError) {
+    console.log("TOP POSTS ERROR: " + topPostsError);
+  }
+
+  return { topPosts };
+}
+
+export async function fetchRecentPosts(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  feed: string
+) {
   const { data: recentPosts, error: recentPostsError } = await supabase
     .from("posts")
     .select()
@@ -73,8 +108,49 @@ export async function fetchPosts(request: Request, page: number, feed: string) {
     console.log(recentPostsError);
   }
 
-  //console.log(topPosts)
-  //console.log(recentPosts)
+  return { recentPosts };
+}
+
+export async function fetchRecentPostsWithSearch(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  feed: string,
+  query: string
+) {
+  const formattedQuery = query.split(" ").map(word => `'${word}'`).join(" | ");
+  console.log(formattedQuery)
+  const { data: recentPosts, error: recentPostsError } = await supabase
+    .from("posts")
+    .select()
+    .eq("feed", feed)
+    .textSearch("content", formattedQuery)
+    .order("created_at", { ascending: false })
+    .range((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE - 1);
+
+  if (recentPostsError) {
+    console.log(recentPostsError);
+  }
+
+  return { recentPosts };
+}
+
+export async function fetchPosts(
+  request: Request,
+  page: number,
+  feed: string,
+  query: string
+) {
+  const { supabase: anonClient } = AnonServerClient(request);
+  const session = await anonClient.auth.getSession();
+  const supabase = ServiceServerClient();
+
+  const { topPosts } = query
+    ? await fetchTopPostsWithSearch(supabase, page, feed, query)
+    : await fetchTopPosts(supabase, page, feed);
+
+  const { recentPosts } = query
+    ? await fetchRecentPostsWithSearch(supabase, page, feed, query)
+    : await fetchRecentPosts(supabase, page, feed);
 
   const concatPosts = topPosts?.concat(recentPosts!);
 
