@@ -4,7 +4,7 @@ import {
   UserIcon,
   BuildingOffice2Icon,
   AcademicCapIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/16/solid";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { useActionData, useOutletContext } from "@remix-run/react";
 import { SupabaseClient } from "@supabase/supabase-js";

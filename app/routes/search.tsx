@@ -31,6 +31,7 @@ export default function Search() {
     <div className="w-full flex flex-wrap border-l border-zinc-100">
       <form
         method="post"
+        action="/search"
         className="mx-auto mt-40 -mb-20 lg:mt-20 lg:-mb-10 flex"
       >
         <label className="input input-bordered flex items-center z-50 gap-2">
@@ -39,7 +40,7 @@ export default function Search() {
             name="query"
             type="text"
             className="grow w-60"
-            defaultValue={decodeURIComponent(pathname).split("/").at(2)}
+            defaultValue=""
             autoFocus
           />
         </label>

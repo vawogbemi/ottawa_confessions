@@ -13,13 +13,13 @@ import {
   useRevalidator,
 } from "@remix-run/react";
 import stylesheet from "~/tailwind.css";
-import { SiteHeader } from "./components/site-header";
 import { MainNav } from "./components/main-nav";
 import { AnonServerClient, ServiceServerClient } from "./api/server";
 import { useEffect, useState } from "react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import { Database } from "database.types";
 import { MobileNav } from "./components/mobile-nav";
+import { DesktopNav } from "./components/desktop-nav";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -116,11 +116,11 @@ export default function App() {
       </head>
       <body className="flex h-screen">
         <main className="mx-auto h-full container flex">
-          <MainNav user={user} />
+          <DesktopNav user={user} supabase={supabase} />
           <div className="w-full h-full flex flex-wrap sm:max-w-[640px] md:max-w-[768px] lg:max-w-[683px] xl:max-w-[853px] 2xl:max-w-[1024px]">
-            <SiteHeader user={user} />
+            <MainNav user={user}/>
+            <MobileNav />
             <Outlet context={{ supabase, user }} />
-            <MobileNav user={user} />
           </div>
         </main>
         <ScrollRestoration />

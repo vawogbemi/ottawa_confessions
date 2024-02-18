@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartIconSolid, } from "@heroicons/react/24/solid";
 import {
   HeartIcon as HeartIconOutline,
   ChatBubbleLeftRightIcon,
@@ -87,34 +87,36 @@ export function Post(props: {
 
       <div className="flex w-full gap-x-5 h-[10%]">
         <div className="flex w-1/2 items-center">
-          <Link to={user ? `/post/${post.id}` : "/login"} className="w-full">
-            <button
-              className="w-12 h-12 flex items-center z-50"
-              type="button"
-              onClick={() =>
-                user
-                  ? (setIsLikedToggle(!isLikedToggle),
-                    setLiked(!liked),
-                    submit(
-                      { post: post.id, user: user.id },
-                      { method: "post" }
-                    ))
-                  : null
-              }
-            >
-              {isLikedToggle ? (
-                <HeartIconSolid className="w-6 h-6 text-rose-500" />
-              ) : (
-                <HeartIconOutline className="w-6 h-6 text-zinc-400 hover:text-rose-500" />
-              )}
-              <p className="text-zinc-400 text-lg ml-1">
-                {post.likes + (liked ? 1 : 0)}
-              </p>
-            </button>
-          </Link>
+          <button
+            className="w-12 h-12 flex items-center"
+            type="button"
+            onClick={() =>
+              user
+                ? (setIsLikedToggle(!isLikedToggle),
+                  setLiked(!liked),
+                  submit({ post: post.id, user: user.id }, { method: "post" }))
+                : null
+            }
+          >
+            {isLikedToggle ? (
+              <HeartIconSolid className="w-6 h-6 text-rose-500" />
+            ) : (
+              <HeartIconOutline className="w-6 h-6 text-zinc-400 hover:text-rose-500" />
+            )}
+            <p className="text-zinc-400 text-lg ml-1">
+              {post.likes + (liked ? 1 : 0)}
+            </p>
+          </button>
+          <Link
+            to={user ? `/post/${post.id}` : "/login"}
+            className="grow h-full"
+          ></Link>
         </div>
         <div className="flex w-1/2 items-center">
-          <Link to={user ? `/post/${post.id}` : "/login"} className="flex">
+          <Link
+            to={user ? `/post/${post.id}` : "/login"}
+            className="flex w-full"
+          >
             <ChatBubbleLeftRightIcon className="w-6 h-6 text-zinc-400" />
             <p className="text-zinc-400 text-lg ml-1">{post.comments}</p>
           </Link>

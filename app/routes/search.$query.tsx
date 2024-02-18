@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { fetchPosts, verifyLike } from "~/api/server";
-import { PostFeed } from "~/components/feed";
+import { PostFeed } from "~/components/post-feed";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = Object.fromEntries(await request.formData());
