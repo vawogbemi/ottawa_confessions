@@ -57,6 +57,60 @@ export type Database = {
         }
         Relationships: []
       }
+      comments: {
+        Row: {
+          comments: number
+          content: string
+          created_at: string
+          id: number
+          likes: number
+          post: number
+          user: string
+          user_tag: string
+          username: string | null
+          views: number
+        }
+        Insert: {
+          comments?: number
+          content: string
+          created_at?: string
+          id?: number
+          likes?: number
+          post: number
+          user: string
+          user_tag: string
+          username?: string | null
+          views?: number
+        }
+        Update: {
+          comments?: number
+          content?: string
+          created_at?: string
+          id?: number
+          likes?: number
+          post?: number
+          user?: string
+          user_tag?: string
+          username?: string | null
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_comments_post_fkey"
+            columns: ["post"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_comments_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       likes: {
         Row: {
           created_at: string
@@ -103,6 +157,7 @@ export type Database = {
           id: number
           likes: number
           school: string
+          threads: number
           user: string
           user_tag: string
           username: string
@@ -117,6 +172,7 @@ export type Database = {
           id?: number
           likes?: number
           school: string
+          threads?: number
           user?: string
           user_tag: string
           username: string
@@ -131,6 +187,7 @@ export type Database = {
           id?: number
           likes?: number
           school?: string
+          threads?: number
           user?: string
           user_tag?: string
           username?: string
@@ -139,6 +196,109 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "public_posts_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      thread_likes: {
+        Row: {
+          created_at: string
+          id: number
+          thread: number | null
+          user: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          thread?: number | null
+          user?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          thread?: number | null
+          user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_thread_likes_thread_fkey"
+            columns: ["thread"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_thread_likes_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      threads: {
+        Row: {
+          comments: number
+          content: string
+          created_at: string
+          feed: string
+          id: number
+          likes: number
+          parent1: number | null
+          parent2: number | null
+          user: string
+          user_tag: string
+          username: string
+          views: number
+        }
+        Insert: {
+          comments?: number
+          content: string
+          created_at?: string
+          feed: string
+          id?: number
+          likes?: number
+          parent1?: number | null
+          parent2?: number | null
+          user: string
+          user_tag: string
+          username: string
+          views?: number
+        }
+        Update: {
+          comments?: number
+          content?: string
+          created_at?: string
+          feed?: string
+          id?: number
+          likes?: number
+          parent1?: number | null
+          parent2?: number | null
+          user?: string
+          user_tag?: string
+          username?: string
+          views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_threads_parent1_fkey"
+            columns: ["parent1"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_threads_parent2_fkey"
+            columns: ["parent2"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_threads_user_fkey"
             columns: ["user"]
             isOneToOne: false
             referencedRelation: "users"

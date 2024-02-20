@@ -71,7 +71,10 @@ export async function fetchTopPostsWithSearch(
   feed: string,
   query: string
 ) {
-  const formattedQuery = query.split(" ").map(word => `'${word}'`).join(" | ");
+  const formattedQuery = query
+    .split(" ")
+    .map((word) => `'${word}'`)
+    .join(" | ");
 
   const { data: topPosts, error: topPostsError } = await supabase
     .from("posts")
@@ -117,8 +120,11 @@ export async function fetchRecentPostsWithSearch(
   feed: string,
   query: string
 ) {
-  const formattedQuery = query.split(" ").map(word => `'${word}'`).join(" | ");
-  console.log(formattedQuery)
+  const formattedQuery = query
+    .split(" ")
+    .map((word) => `'${word}'`)
+    .join(" | ");
+
   const { data: recentPosts, error: recentPostsError } = await supabase
     .from("posts")
     .select()
@@ -177,6 +183,50 @@ export async function fetchPosts(
   const posts = uniquePosts.map((post) => ({ post, isLiked: false }));
 
   return { posts, page };
+}
+
+export async function fetchPost(request: Request, postQuery: string) {
+  const { supabase: anonClient } = AnonServerClient(request);
+  const session = await anonClient.auth.getSession();
+  const supabase = ServiceServerClient();
+
+  if (session) {
+    const { data: users } = await supabase
+      .from("users")
+      .select()
+      .eq("id", session.data.session!.user.id!);
+
+    const { data: posts } = await supabase
+      .from("posts")
+      .select()
+      .eq("id", postQuery);
+
+    if (posts && posts.at(0) && users && users.at(0)) {
+      const post = posts.at(0);
+      const user = users.at(0);
+      if (
+        post && user
+          ? post.feed == user.city || post.feed == user.school
+          : false
+      ) {
+        const { data: likes } = await supabase
+          .from("likes")
+          .select("post")
+          .eq("user", session.data.session!.user.id)
+          .eq("post", posts.at(0)!.id);
+
+        return {
+          post: post,
+          isLiked: likes?.find((likedPost) => posts.at(0)!.id == likedPost.post)
+            ? true
+            : false,
+        };
+      }
+      return null;
+    }
+    return null;
+  }
+  return null;
 }
 
 export async function verifyLike(post: number, user: string) {
@@ -249,5 +299,80 @@ export async function verifyLike(post: number, user: string) {
     }
   }
 
+  return null;
+}
+
+export async function createComment(
+  post: number,
+  reply: string,
+  user:
+    | {
+        id: string;
+        username: string;
+        city: string | null;
+        school: string | null;
+      }
+    | null
+    | undefined
+) {
+  if (user && user.city && user.school) {
+    const supabase = await ServiceServerClient();
+    const { error } = await supabase.from("comments").insert({
+      content: reply,
+      post: post,
+      user_tag: user?.school,
+      user: user?.id,
+      username: user?.username,
+    });
+
+    if (error) {
+      console.log(error);
+    }
+  }
+
+  return null;
+}
+
+
+export async function fetchComments(request: Request, postQuery: string) {
+  const { supabase: anonClient } = AnonServerClient(request);
+  const session = await anonClient.auth.getSession();
+  const supabase = ServiceServerClient();
+
+  if (session) {
+    const { data: users } = await supabase
+      .from("users")
+      .select()
+      .eq("id", session.data.session!.user.id!);
+
+    const { data: comments } = await supabase
+      .from("comments")
+      .select()
+      .eq("post", postQuery);
+
+    if (comments && comments.at(0) && users && users.at(0)) {
+      const comment = comments.at(0);
+      const user = users.at(0);
+     
+        const { data: likes } = await supabase
+          .from("likes")
+          .select("post")
+          .eq("user", user)
+          .eq("post", posts.at(0)!.id);
+
+        return {
+          post: post,
+          isLiked: likes?.find((likedPost) => posts.at(0)!.id == likedPost.post)
+            ? true
+            : false,
+        };
+     
+    }
+    return null;
+  }
+  return null;
+}
+
+export async function createPost(){
   return null;
 }

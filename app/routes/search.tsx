@@ -34,7 +34,7 @@ export default function Search() {
         action="/search"
         className="mx-auto mt-40 -mb-20 lg:mt-20 lg:-mb-10 flex"
       >
-        <label className="input input-bordered flex items-center z-50 gap-2">
+        <label className="input input-bordered flex items-center gap-2">
           <MagnifyingGlassIcon className="w-4 h-4" />
           <input
             name="query"
@@ -44,7 +44,7 @@ export default function Search() {
             autoFocus
           />
         </label>
-        <button className="btn btn-primary ml-5 z-50">Search</button>
+        <button className="btn btn-primary ml-5">Search</button>
       </form>
 
       {pathname != ("/search" || "/search/") && <Outlet context={{ user }} />}

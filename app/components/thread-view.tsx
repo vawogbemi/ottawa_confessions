@@ -6,24 +6,22 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, useSubmit } from "@remix-run/react";
 
-export function PostView(props: {
-  posts: {
-    post:
-      | {
-          city: string;
-          comments: number;
-          content: string;
-          created_at: string;
-          feed: string | null;
-          id: number;
-          likes: number;
-          school: string;
-          user: string;
-          user_tag: string;
-          username: string;
-          views: number;
-        }
-      | undefined;
+export function ThreadView(props: {
+  threads: {
+    thread: {
+      comments: number;
+      content: string;
+      created_at: string;
+      feed: string;
+      id: number;
+      likes: number;
+      parent1: number | null;
+      parent2: number | null;
+      user: string;
+      user_tag: string;
+      username: string;
+      views: number;
+    };
     isLiked: boolean;
   }[];
   user:
@@ -36,11 +34,11 @@ export function PostView(props: {
     | null
     | undefined;
 }) {
-  const { posts, user } = props;
-  return posts.map((post) =>
-    post && post.post ? (
-      <div key={post.post.id} className="w-full lg:w-1/2">
-        <PostCard key={post.post.id} post={post} user={user} />
+  const { threads, user } = props;
+  return threads.map((thread) =>
+    thread && thread.thread ? (
+      <div key={thread.thread.id} className="w-full lg:w-1/2">
+        <ThreadCard key={thread.thread.id} thread={thread} user={user} />
       </div>
     ) : (
       <></>
@@ -48,24 +46,22 @@ export function PostView(props: {
   );
 }
 
-export function PostCard(props: {
-  post: {
-    post:
-      | {
-          city: string;
-          comments: number;
-          content: string;
-          created_at: string;
-          feed: string | null;
-          id: number;
-          likes: number;
-          school: string;
-          user: string;
-          user_tag: string;
-          username: string;
-          views: number;
-        }
-      | undefined;
+export function ThreadCard(props: {
+  thread: {
+    thread: {
+      comments: number;
+      content: string;
+      created_at: string;
+      feed: string;
+      id: number;
+      likes: number;
+      parent1: number | null;
+      parent2: number | null;
+      user: string;
+      user_tag: string;
+      username: string;
+      views: number;
+    };
     isLiked: boolean;
   };
   user:
@@ -78,29 +74,29 @@ export function PostCard(props: {
     | null
     | undefined;
 }) {
-  const { post: postProps, user } = props;
-  const { post, isLiked } = postProps;
+  const { thread: threadProps, user } = props;
+  const { thread, isLiked } = threadProps;
   const [isLikedToggle, setIsLikedToggle] = useState(isLiked);
   const [liked, setLiked] = useState(isLiked);
   const submit = useSubmit();
-  return postProps && post ? (
+  return threadProps && thread ? (
     <div
       className="w-full h-[225px] border border-zinc-100 p-3 flex flex-wrap hover:bg-base-200"
-      key={post.id}
+      key={thread.id}
     >
       <Link
-        to={user ? `/post/${post.id}` : "/login"}
+        to={user ? `/thread/${thread.id}` : "/login"}
         className="w-full h-[90%] flex flex-wrap content-start"
       >
         {/*<p className="text-2xl font-extrabold text-primary text-wrap line-clamp-2">
           {post.title}
          </p>*/}
         <p className="text-primary w-full">
-          {`${post.user_tag}`}{" "}
-          <span className="text-zinc-400">{` • ${post.username}`}</span>
+          {`${thread.user_tag}`}{" "}
+          <span className="text-zinc-400">{` • ${thread.username}`}</span>
         </p>
         <p className="text-xl font-medium text-pretty line-clamp-4 text-zinc-700 mt-2 w-full">
-          {post.content}
+          {thread.content}
         </p>
       </Link>
 
@@ -113,7 +109,10 @@ export function PostCard(props: {
               user
                 ? (setIsLikedToggle(!isLikedToggle),
                   setLiked(!liked),
-                  submit({ post: post.id, user: user.id }, { method: "post" }))
+                  submit(
+                    { post: thread.id, user: user.id },
+                    { method: "post" }
+                  ))
                 : null
             }
           >
@@ -123,21 +122,21 @@ export function PostCard(props: {
               <HeartIconOutline className="w-6 h-6 text-zinc-400 hover:text-rose-500" />
             )}
             <p className="text-zinc-400 text-lg ml-1">
-              {post.likes + (liked ? 1 : 0)}
+              {thread.likes + (liked ? 1 : 0)}
             </p>
           </button>
           <Link
-            to={user ? `/post/${post.id}` : "/login"}
+            to={user ? `/thread/${thread.id}` : "/login"}
             className="grow h-full"
           ></Link>
         </div>
         <div className="flex w-1/2 items-center">
           <Link
-            to={user ? `/post/${post.id}` : "/login"}
+            to={user ? `/thread/${thread.id}` : "/login"}
             className="flex w-full"
           >
             <ChatBubbleLeftRightIcon className="w-6 h-6 text-zinc-400" />
-            <p className="text-zinc-400 text-lg ml-1">{post.comments}</p>
+            <p className="text-zinc-400 text-lg ml-1">{thread.comments}</p>
           </Link>
         </div>
       </div>

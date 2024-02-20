@@ -72,7 +72,7 @@ export default function Profile() {
                 name="username"
                 type="text"
                 className="grow"
-                placeholder={user?.username}
+                defaultValue={user?.username}
                 autoFocus
               />
             </label>
