@@ -57,7 +57,7 @@ export function PostFeed(props: {
   const { posts, fetcher, user } = props;
 
   const [postsData, setPostsData] = useState(posts.posts);
-
+  console.log(postsData);
   // An effect for appending data to items state
   useEffect(() => {
     if (!fetcher.data || fetcher.state === "loading") {
@@ -74,11 +74,9 @@ export function PostFeed(props: {
 
   // A method for fetching next page
   const loadNext = () => {
-    if (user) {
-      const page = fetcher.data ? fetcher.data.posts.page + 1 : posts.page + 1;
-      const query = `?index&page=${page}`;
-      fetcher.load(query); // this call will trigger the loader with a new query
-    }
+    const page = fetcher.data ? fetcher.data.posts.page + 1 : posts.page + 1;
+    const query = `?index&page=${page}`;
+    fetcher.load(query); // this call will trigger the loader with a new query
   };
 
   return (
@@ -88,21 +86,14 @@ export function PostFeed(props: {
           {/*Spacing for Site Header */}
           <div className="py-8 w-full"></div>
           <PostView
-            posts={user ? postsData : postsData.slice(1, 10)}
+            posts={user ? postsData : postsData.slice(0, 10)}
             user={user}
           />
-                    <div className="py-6 lg:py-0 w-full"></div>
-          {!user && (
-            <div className="w-full h-screen flex">
-              <button className="btn btn-primary mx-auto my-auto" type="button">
-                Login to view more
-              </button>
-            </div>
-          )}
+          <div className="py-6 lg:py-0 w-full"></div>
         </div>
       ) : (
         <div className="w-full flex-wrap h-screen border-l border-zinc-100 flex">
-          <p className="w-full font-bold mx-auto my-auto">No posts yet. Create the first <Link to={"/post/new"} className="text-primary">one.</Link></p>
+          <p className=" font-bold mx-auto my-auto">No posts found</p>
         </div>
       )}
     </InfiniteScroller>

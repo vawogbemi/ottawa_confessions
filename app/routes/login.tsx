@@ -18,7 +18,10 @@ export default function Login() {
   }>();
 
   return (
-    <div className="w-[400px] mx-auto mt-40 lg:mt-80">
+    <div className="w-[350px] mx-auto mt-40 lg:mt-80">
+      <p className="text-zinc-900 text-pretty text-2xl mt-2 w-full">
+        Log in with your uOttawa or Carleton email
+      </p>
       <Auth
         supabaseClient={supabase}
         appearance={{
@@ -26,8 +29,8 @@ export default function Login() {
           variables: {
             default: {
               colors: {
-                brand: "#701a75",
-                brandAccent: "#a21caf",
+                brand: "#b91c1c",
+                brandAccent: "#b91c1c",
               },
             },
           },
@@ -36,9 +39,7 @@ export default function Login() {
         providers={[]}
         showLinks={true}
         redirectTo={
-          process.env.NODE_ENV == "development"
-            ? "http://localhost:3000"
-            : "https://rue-mvp.fly.dev/"
+          process.env.NODE_ENV == "development" ? "http://localhost:3000/" : "wwww.ottawaconfessions.com/"
         }
       />
       <p className="px-8 text-center text-sm text-muted-foreground">

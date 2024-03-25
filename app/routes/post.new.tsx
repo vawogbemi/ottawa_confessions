@@ -1,20 +1,22 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { useOutletContext, useSubmit } from "@remix-run/react";
 import { useState } from "react";
 import { createPost } from "~/api/server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-    const formData = Object.fromEntries(await request.formData());
-  
-    const post = parseInt(formData.post as string);
-    const user = formData.user as string;
-  
-    const reply = formData.reply as string;
+  const formData = Object.fromEntries(await request.formData());
 
-     
-    return null
-  
-  };
+  const content = formData.content as string;
+
+  createPost(
+    content,
+    formData.id as string,
+    formData.username as string,
+    formData.city as string,
+    formData.school as string
+  );
+  return redirect("/");
+};
 export default function NewPost() {
   const { user } = useOutletContext<{
     user:
@@ -28,9 +30,10 @@ export default function NewPost() {
       | undefined;
   }>();
 
-  const submit = useSubmit()
-  const [content, setContent] = useState("")
-
+  const submit = useSubmit();
+  const [content, setContent] = useState("");
+  const [school, setSchool] = useState("University of Ottawa");
+  const [username, setUsername] = useState("Anonymous");
   return (
     <div className="w-full border-l border-zinc-100 flex flex-wrap">
       <div className="w-[400px] mx-auto mt-9">
@@ -39,18 +42,58 @@ export default function NewPost() {
             <div className="label">
               <p className="text-primary w-full">
                 <span className="text-zinc-900 text-xl font-bold">{`Confessing as: `}</span>
-                {`${user?.school}`}
-                <span className="text-zinc-400">{` • ${user?.username}`}</span>
+                {user ? (
+                  <div>
+                    {`${user?.school}`}
+                    <span className="text-zinc-400">{` • ${user?.username}`}</span>
+                  </div>
+                ) : (
+                  <div>
+                    <select
+                      className="select select-bordered w-full max-w-xs"
+                      onChange={(e) => setSchool(e.target.value)}
+                    >
+                      <option>University of Ottawa</option>
+                      <option>Carleton University</option>
+                    </select>
+                    <label className="input input-bordered flex items-center gap-2 mt-2">
+                      <input
+                        type="text"
+                        className="grow text-zinc-500"
+                        placeholder="Anonymous"
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                )}
               </p>
             </div>
             <textarea
-              className="textarea textarea-bordered h-24"
+              className="textarea textarea-bordered h-24 w-[350px]"
               name="content"
-              onChange={(e)=>setContent(e.target.value)}
-              placeholder="Osmows is the best shawarma, this is not an ad btw, but they should pay me."
+              onChange={(e) => setContent(e.target.value)}
+              placeholder=""
             ></textarea>
           </label>
-          <button className="btn btn-primary ml-2" onClick={() => submit({contet: content, user: user!}, {method: "post"})}>Confess</button>
+          <button
+            className="btn btn-primary ml-2"
+            onClick={() =>
+              submit(
+                {
+                  content: content,
+                  id: user
+                    ? (user?.id as string)
+                    : "60687930-2df6-4c75-8d18-03512cd8e6c5",
+                  username: user ? (user?.username as string) : username,
+                  city: user ? (user?.city as string) : "Ottawa",
+                  school: user ? (user?.school as string) : school,
+                },
+                { method: "post" }
+              )
+            }
+          >
+            Confess
+          </button>
         </form>
       </div>
     </div>

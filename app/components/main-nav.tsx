@@ -5,7 +5,7 @@ import {
   PencilSquareIcon,
   UserIcon,
 } from "@heroicons/react/16/solid";
-import { NavCard } from "./nav-card";
+import { AuthNavCard, NavCard } from "./nav-card";
 import { useLocation, useNavigate } from "@remix-run/react";
 
 export function MainNav(props: {
@@ -47,7 +47,7 @@ export function MainNav(props: {
           to={"/post/new"}
           user={user}
         />
-        <NavCard
+        <AuthNavCard
           icon={<UserIcon className="w-6 h-6" />}
           to={"/profile"}
           user={user}

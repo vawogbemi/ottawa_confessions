@@ -1,4 +1,4 @@
-import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { json, LoaderFunctionArgs, redirect, type MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useOutletContext } from "@remix-run/react";
 import { fetchPosts, verifyLike } from "~/api/server";
 import { PostFeed } from "~/components/post-feed";
@@ -18,7 +18,9 @@ export const action = async ({ request }: LoaderFunctionArgs) => {
 
   const post = parseInt(formData.post as string);
   const user = formData.user as string;
-
+  if (!post){
+    return redirect("/login")
+  }
   return verifyLike(post, user);
 };
 

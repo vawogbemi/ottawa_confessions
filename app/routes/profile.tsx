@@ -6,7 +6,7 @@ import {
   AcademicCapIcon,
 } from "@heroicons/react/16/solid";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { useActionData, useOutletContext } from "@remix-run/react";
+import { useActionData, useNavigate, useOutletContext } from "@remix-run/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "database.types";
 import {
@@ -59,7 +59,7 @@ export default function Profile() {
       | undefined;
     supabase: SupabaseClient<Database>;
   }>();
-
+  const navigate = useNavigate();
   return (
     <div className="w-full h-full border-l border-zinc-10 flex flex-wrap">
       <div className="max-w-[400px] flex flex-wrap w-full my-auto mx-auto">
@@ -107,18 +107,16 @@ export default function Profile() {
             </label>
           </div>
           <div>
-          <button className="btn btn-primary">Update</button>
-          <button
-        type="button"
-          className="btn btn-primary ml-5"
-          onClick={() => supabase.auth.signOut()}
-        >
-          Log Out
-        </button>
+            <button className="btn btn-primary">Update</button>
+            <button
+              type="button"
+              className="btn btn-primary ml-5"
+              onClick={() => (supabase.auth.signOut(), navigate("/"))}
+            >
+              Log Out
+            </button>
           </div>
-         
         </form>
-        
       </div>
     </div>
   );

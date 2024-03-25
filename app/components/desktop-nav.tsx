@@ -51,7 +51,7 @@ export function DesktopNav(props: {
             <img src={instagram_black_logo} alt="insta" className="w-8"></img>
           </Link>
         </div>
-        <div className="flex flex-wrap gap-2 mt-40">
+        {false && <div className="flex flex-wrap gap-2 mt-40">
           {user ? (
             <button
               className="btn btn-lg btn-primary p-6 mx-auto float-end"
@@ -64,7 +64,7 @@ export function DesktopNav(props: {
               <button className="btn btn-lg btn-primary p-6">Login</button>
             </Link>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

@@ -27,6 +27,7 @@
     "resend": "^3.2.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.2",
     "@remix-run/dev": "^2.6.0",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.20",

@@ -232,6 +232,8 @@ export async function fetchPost(request: Request, postQuery: string) {
 export async function verifyLike(post: number, user: string) {
   const supabase = ServiceServerClient();
 
+  
+
   const { data: like, error: fetchLikeError } = await supabase
     .from("likes")
     .select()
@@ -249,6 +251,24 @@ export async function verifyLike(post: number, user: string) {
 
   if (fetchPostError) {
     console.log("FETCH POST ERROR: " + fetchPostError);
+  }
+
+  if (!user){
+    //add like to post
+    if (data && data?.at(0) && typeof data.at(0)?.likes == "number") {
+      const likes = data?.at(0)?.likes;
+
+      const { error: likePostError } = await supabase
+        .from("posts")
+        .update({ likes: likes! + 1 })
+        .eq("id", post);
+
+      if (likePostError) {
+        console.log("LIKE POST ERROR: " + likePostError);
+      }
+    }
+
+    return null
   }
 
   if (like && like.at(0)) {
@@ -302,77 +322,63 @@ export async function verifyLike(post: number, user: string) {
   return null;
 }
 
-export async function createComment(
-  post: number,
-  reply: string,
-  user:
-    | {
-        id: string;
-        username: string;
-        city: string | null;
-        school: string | null;
-      }
-    | null
-    | undefined
+export async function createPost(
+  content: string,
+  id: string,
+  username: string,
+  city: string,
+  school: string
 ) {
-  if (user && user.city && user.school) {
-    const supabase = await ServiceServerClient();
-    const { error } = await supabase.from("comments").insert({
-      content: reply,
-      post: post,
-      user_tag: user?.school,
-      user: user?.id,
-      username: user?.username,
-    });
+  const supabase = await ServiceServerClient();
+  const { error } = await supabase.from("posts").insert({
+    school: school,
+    city: city,
+    feed: "Ottawa",
+    content: content,
+    user_tag: school,
+    user: id,
+    username: username,
+  });
 
-    if (error) {
-      console.log(error);
-    }
+  if (error) {
+    console.log(error);
   }
 
   return null;
 }
 
 
-export async function fetchComments(request: Request, postQuery: string) {
-  const { supabase: anonClient } = AnonServerClient(request);
-  const session = await anonClient.auth.getSession();
-  const supabase = ServiceServerClient();
+export function relativeDate(date: Date) {
+  const diff = Math.round((new Date(Date.now()) - new Date(date)) / 1000);
 
-  if (session) {
-    const { data: users } = await supabase
-      .from("users")
-      .select()
-      .eq("id", session.data.session!.user.id!);
+  const minute = 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const week = day * 7;
+  const month = day * 30;
+  const year = month * 12;
 
-    const { data: comments } = await supabase
-      .from("comments")
-      .select()
-      .eq("post", postQuery);
-
-    if (comments && comments.at(0) && users && users.at(0)) {
-      const comment = comments.at(0);
-      const user = users.at(0);
-     
-        const { data: likes } = await supabase
-          .from("likes")
-          .select("post")
-          .eq("user", user)
-          .eq("post", posts.at(0)!.id);
-
-        return {
-          post: post,
-          isLiked: likes?.find((likedPost) => posts.at(0)!.id == likedPost.post)
-            ? true
-            : false,
-        };
-     
-    }
-    return null;
+  if (diff < 30) {
+    return "just now";
+  } else if (diff < minute) {
+    return diff + " seconds ago";
+  } else if (diff < 2 * minute) {
+    return "a minute ago";
+  } else if (diff < hour) {
+    return Math.floor(diff / minute) + " minutes ago";
+  } else if (Math.floor(diff / hour) == 1) {
+    return "1 hour ago";
+  } else if (diff < day) {
+    return Math.floor(diff / hour) + " hours ago";
+  } else if (diff < day * 2) {
+    return "yesterday";
+  } else if (diff < week) {
+    return week + " days ago";
+  } else if (diff < month) {
+    return Math.floor(diff / week) + " weeks ago";
+  } else if (diff < year) {
+    return Math.floor(diff / month) + " months ago";
+  } else {
+    return Math.floor(diff / year) + " years ago";
   }
-  return null;
-}
-
-export async function createPost(){
-  return null;
 }

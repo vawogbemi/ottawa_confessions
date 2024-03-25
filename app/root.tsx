@@ -60,7 +60,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const url = new URL(request.url)
 
-  if (!["/", "/login"].includes(url.pathname)){
+  if (["/profile"].includes(url.pathname)){
     return redirect("/login")
   }
 
@@ -107,14 +107,14 @@ export default function App() {
   const user = userData?.at(0);
 
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className="flex h-screen">
+      <body className="flex h-screen" data-theme="mytheme">
         <main className="mx-auto h-full container flex">
           <DesktopNav user={user} supabase={supabase} />
           <div className="w-full h-full flex flex-wrap sm:max-w-[640px] md:max-w-[768px] lg:max-w-[683px] xl:max-w-[853px] 2xl:max-w-[1024px]">
